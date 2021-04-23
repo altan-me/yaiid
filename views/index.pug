@@ -1,0 +1,14 @@
+extends layout
+block layout-content
+  #id
+    .wrapper
+      .hub
+        span
+          form#pingCheck(action="/ping", method="POST")
+            input#url.url(
+              type="text",
+              name="url",
+              value="",
+              placeholder="https://example.com"
+            )
+            input.submit(type="submit", value="Submit") 

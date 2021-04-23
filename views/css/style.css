@@ -1,0 +1,63 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,900);
+
+body {
+  background-color: #ffffff;
+  padding: 0px;
+  margin: 0px;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  background-color: black;
+  border: solid black;
+  border-width: 12px 18px;
+  border-radius: 0.4vw;
+  width: 38em;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0.5em;
+  width: 100%;
+  text-align: center;
+}
+
+/* input {
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 0.4vw;
+  margin: 0;
+  font-size: 2em;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgb(0, 0, 0);
+}
+
+input.url {
+  max-width: 13em;
+  margin-right: 0.5em;
+} */
+
+p {
+  margin: 0;
+  font-size: 0.7rem;
+}
+/* 
+input {
+  border: 0;
+  height: 5em;
+  border-radius: 0.5em;
+} */
+
+.hub input:nth-child(3) {
+  background: #3ae3ff;
+  color: #000000;
+  border-radius: 0.4vw;
+  display: inline-block;
+}
