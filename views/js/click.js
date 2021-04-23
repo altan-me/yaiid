@@ -1,5 +1,17 @@
 console.log("JS LOADED");
 
+const displayResponse = function (response) {
+  document.getElementById("wrapper").style.height = "125px";
+  const disp = document.getElementById("response");
+  if (response.state == true) {
+    disp.innerText = "Site looks up from here.";
+    console.log("true");
+  } else {
+    disp.innerText = "Site not responding.";
+  }
+  disp.style.display = "block";
+};
+
 function logSubmit(event) {
   event.preventDefault();
   let url = document.getElementById("url").value;
@@ -16,6 +28,7 @@ function logSubmit(event) {
     .then((response) => response.json())
     .then((data) => {
       console.log("Success:", data);
+      displayResponse(data);
     })
     .catch((error) => {
       console.error("Error:", error);

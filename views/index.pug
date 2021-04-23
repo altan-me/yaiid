@@ -1,7 +1,7 @@
 extends layout
 block layout-content
   #id
-    .wrapper
+    #wrapper.wrapper
       .hub
         span
           form#pingCheck(action="/ping", method="POST")
@@ -12,3 +12,4 @@ block layout-content
               placeholder="https://example.com"
             )
             input.submit(type="submit", value="Submit") 
+      #response.response
