@@ -57,7 +57,7 @@ p {
 }
 
 .hub input:nth-child(2) {
-  background: #3ae3ff;
+  background: #ffd016;
   color: #000000;
   border-radius: 0.4vw;
   display: inline-block;
@@ -103,7 +103,7 @@ p {
 }
 
 .submit:after {
-  content: "\00bb";
+  /* content: "\00bb"; */
   position: absolute;
   opacity: 0;
   top: 0;
