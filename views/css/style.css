@@ -16,9 +16,9 @@ body {
   text-align: center;
   background-color: black;
   border: solid black;
-  border-width: 12px 18px;
+  border-width: 16px 18px;
   border-radius: 0.4vw;
-  transition: 1s ease-in-out;
+  /* transition: 1s ease-in-out; */
   /* width: 38em; */
 }
 
@@ -47,6 +47,10 @@ input.url {
   padding-left: 1em;
 }
 
+::placeholder {
+  overflow: visible;
+}
+
 p {
   margin: 0;
   font-size: 0.7rem;
@@ -63,11 +67,53 @@ p {
   display: none;
   color: white;
   text-transform: uppercase;
+  border: 2px solid green;
+  border-radius: 0.4vw;
+  /* margin: 0; */
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  font-size: 1.4em;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgb(0, 0, 0);
+  line-height: 2.7;
+  font-weight: 600;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.detail {
+  display: none;
+  color: white;
+  text-transform: uppercase;
   border: 0;
   border-radius: 0.4vw;
   margin: 0;
-  font-size: 2.2em;
+  font-size: 1em;
   white-space: nowrap;
   text-shadow: 0 1px 0 rgb(0, 0, 0);
-  line-height: 2.3;
+}
+
+.submit {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+}
+
+.submit:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.submit:hover {
+  background-color: #fff;
+  box-shadow: 0px 10px 10px rgba(255, 255, 255, 0.4);
+  color: #fff;
+  transform: translateY(-2px);
 }
