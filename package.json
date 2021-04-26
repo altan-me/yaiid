@@ -1,6 +1,6 @@
 {
   "name": "yaiid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "express": "^4.17.1",
     "express-validator": "^6.10.0",
     "path": "^0.12.7",
-    "ping": "^0.4.1",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "tcp-ping-port": "^1.0.1"
   }
 }

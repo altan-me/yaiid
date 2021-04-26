@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const { body, validationResult } = require("express-validator");
 const path = require("path");
-const ping = require("ping");
+const { tcpPingPort } = require("tcp-ping-port");
 
 // App Configuration
 app.set("views", path.join(__dirname, "views"));
@@ -24,9 +24,9 @@ const cleanUrl = function (url) {
 };
 
 const pingHosts = async function (host) {
-  let res = await ping.promise.probe(host, {
-    timeout: 10,
-    // extra: ["-i", "2"],
+  let res = await tcpPingPort(host).then((online) => {
+    console.log(online);
+    return online;
   });
   return res;
 };
@@ -48,8 +48,7 @@ app.post("/ping", async function (req, res) {
   } else {
     console.log("req has value");
     let result = await pingHosts(url);
-    console.log(result);
-    res.json({ state: result.alive, ip: result.numeric_host, url: url });
+    res.json({ state: result.online, ip: result.ip, url: url });
   }
 });
 
