@@ -21,7 +21,12 @@ const populateUI = function (main, subcontent, visibility, height) {
 
 const displayResponse = function (response) {
   if (response.state == true) {
-    let innerText = `URL: ${response.url} IP: ${response.ip}`;
+    // let innerText = `URL: ${response.url} IP: ${response.ip}`;
+    let innerText =
+      `${response.url ? `🌏 ${response.url}` : ""}` +
+      `${response.url && response.ip ? " " : ""}` +
+      `${response.ip ? `💻 ${response.ip}` : ""}`;
+
     populateUI("Site looks up from here.", innerText, true, "160px");
   } else if (response.state == false) {
     populateUI("Site not responding.", " ", true, "127px");

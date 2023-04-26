@@ -5,6 +5,8 @@ const app = express();
 const { body, validationResult } = require("express-validator");
 const path = require("path");
 const { tcpPingPort } = require("tcp-ping-port");
+const ping = require("ping");
+const { promisify } = require("util");
 
 // App Configuration
 app.set("views", path.join(__dirname, "views"));
@@ -20,20 +22,30 @@ app.use(
 app.use(express.json());
 
 const cleanUrl = function (url) {
-  return url.replace(/(^\w+:|^)\/\//, "");
+  const regex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/;
+  const match = url.match(regex);
+
+  if (match) {
+    return match[1];
+  } else {
+    return url.replace(/(^\w+:|^)\/\//, "");
+  }
 };
 
 const pingHosts = async function (host) {
-  let res = await tcpPingPort(host).then((online) => {
-    console.log(online);
-    return online;
-  });
-  return res;
+  let online = await tcpPingPort(host);
+  if (!online.online && /^(\d{1,3}\.){3}\d{1,3}$/.test(host)) {
+    // check if input is an IP address
+    const result = await ping.promise.probe(host);
+    online.online = result.alive;
+  }
+  console.log(online);
+  return online;
 };
 
 //Return IP on index page
 app.get("/", (req, res) => {
-  res.render("index", { title: "Up Check" });
+  res.render("index", { title: "YetAnotherIsItDown" });
 });
 
 // Access the parse results as request.body

@@ -2,6 +2,8 @@ extends layout
 block layout-content
   #id
     #wrapper.wrapper
+      h1 YAIID
+      sub YetAnotherIsItDown
       .hub
         span
           form#pingCheck(action="/ping", method="POST")
@@ -12,6 +14,6 @@ block layout-content
               placeholder="example.com",
               required
             )
-            input.submit(type="submit", value="Submit")
+            input.submit(type="submit", value="Check")
       #response.response
       #detail.detail
