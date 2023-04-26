@@ -77,4 +77,6 @@ app.use(function (err, req, res, next) {
 
 // Listen for Webhook Ingest
 const port = process.env.PORT || 8001;
-app.listen(port, () => console.log(`🚀 Server running on port ${[port]}`));
+app.listen(port, () =>
+  console.log(`🚀 Server running on container port ${[port]}`)
+);

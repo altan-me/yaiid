@@ -50,7 +50,6 @@ function logSubmit(event) {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log("Success:", data);
       displayResponse(data);
     })
     .catch((error) => {
