@@ -64,9 +64,10 @@ p {
 }
 
 .hub input:nth-child(2) {
-  background: #42a5f5;
-  color: #121212;
+  background: #1976d2;
+  color: #e3f2fd;
   border-radius: 0.2em;
+  font-weight: 500;
   display: inline-block;
 }
 .hub input:nth-child(2):hover {
@@ -112,8 +113,8 @@ p {
   display: inline-block;
   position: relative;
   transition: 0.5s;
-  padding-left: 0.7em;
-  padding-right: 0.7em;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
   font-family: inherit;
 }
 
