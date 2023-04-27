@@ -3,6 +3,7 @@
 const express = require("express");
 const app = express();
 const { body, validationResult } = require("express-validator");
+const rateLimit = require("express-rate-limit");
 const path = require("path");
 const { tcpPingPort } = require("tcp-ping-port");
 const ping = require("ping");
@@ -21,7 +22,23 @@ app.use(
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 
-const cleanUrl = function (url) {
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 20, // limit each IP to 20 requests per windowMs
+  message: { error: "Request limit exceeded" },
+  statusCode: 429, // set the status code to 429 (Too Many Requests)
+});
+
+const sanitizeInput = function (url) {
+  // Check if input is a valid URL or IP
+  const urlRegex =
+    /^((https?|ftp):\/\/)?([^\s/$.?#].[^\s]*)|([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/i;
+  const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+  if (!url.match(urlRegex) && !url.match(ipRegex)) {
+    return null;
+  }
+
+  // If input is a valid URL, extract the hostname
   const regex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/;
   const match = url.match(regex);
 
@@ -49,16 +66,13 @@ app.get("/", (req, res) => {
 });
 
 // Access the parse results as request.body
-app.post("/ping", async function (req, res) {
-  console.log(`res = ${req.body.url}`);
-  console.log(`res = ${cleanUrl(req.body.url)}`);
-  let url = cleanUrl(req.body.url);
+app.post("/ping", limiter, async function (req, res) {
+  let url = sanitizeInput(req.body.url);
 
   if (req.body.url == "") {
     let error = "No URL / IP provided";
     res.json({ error: error });
   } else {
-    console.log("req has value");
     let result = await pingHosts(url);
     res.json({ state: result.online, ip: result.ip, url: url });
   }

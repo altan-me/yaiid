@@ -81,6 +81,7 @@ p {
 }
 .hub form {
   display: flex;
+  justify-content: center;
 }
 
 .response {
