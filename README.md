@@ -40,6 +40,8 @@ npm test
 
 YAIID uses TCP and ICMP ping to check the availability of a URL or IP address. When you send a request to the server with a URL or IP address, the server pings the address using TCP and ICMP. If the server receives a response from either of these methods, it returns a "200 OK" response indicating that the address is accessible. Otherwise, it returns a "404 Not Found" response.
 
+When a FQDN is provided this tool performs a HEAD request to the server using HTTPS protocol on port 443. It then checks the SSL/TLS certificate associated with the domain and returns various statistics related to the certificate.
+
 ## Contributing
 
 Contributions to YAIID are welcome! If you find a bug or have a suggestion for a new feature, please open an issue on this repository. If you'd like to contribute code to YAIID, please fork this repository and submit a pull request.
