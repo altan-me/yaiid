@@ -3,6 +3,7 @@
 const express = require("express");
 const app = express();
 const { body, validationResult } = require("express-validator");
+const favicon = require("serve-favicon");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
 const { tcpPingPort } = require("tcp-ping-port");
@@ -13,6 +14,7 @@ const https = require("https");
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
+app.use(favicon(path.join(__dirname, "views", "favicon.ico")));
 app.use(
   express.urlencoded({
     extended: true,
