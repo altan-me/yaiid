@@ -7,7 +7,7 @@ const rateLimit = require("express-rate-limit");
 const path = require("path");
 const { tcpPingPort } = require("tcp-ping-port");
 const ping = require("ping");
-const { promisify } = require("util");
+const https = require("https");
 
 // App Configuration
 app.set("views", path.join(__dirname, "views"));
@@ -28,6 +28,80 @@ const limiter = rateLimit({
   message: { error: "Request limit exceeded" },
   statusCode: 429, // set the status code to 429 (Too Many Requests)
 });
+
+const isFQDN = function (input) {
+  const fqdnRegex =
+    /^(?!:\/\/)(?:(?!-)[A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,6}$/;
+  return fqdnRegex.test(input) ? input : null;
+};
+
+const checkTLSStats = async function (url) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      method: "HEAD", // Reduces response payload size
+      host: url,
+      port: 443,
+      requestCert: true,
+      rejectUnauthorized: true,
+      agent: false, //stops caching
+    };
+    const request = https.request(options, (res) => {
+      const cert = res.socket.getPeerCertificate();
+
+      // Check if certificate is valid
+      let status;
+      if (cert.valid_to < new Date()) {
+        status = "expired";
+      } else if (cert.valid_from > new Date()) {
+        status = "not yet valid";
+      } else {
+        status = "valid";
+      }
+
+      // Get all the SANs in the certificate
+      let sans = [];
+      if (cert.subjectaltname) {
+        sans = cert.subjectaltname.split(",").map((san) => san.trim());
+      }
+
+      // Calculate days until certificate expires
+      const daysUntilExpiry = Math.ceil(
+        (new Date(cert.valid_to) - new Date()) / (1000 * 60 * 60 * 24)
+      );
+
+      // Check if certificate is a wildcard certificate
+      const isWildcard =
+        sans.find((san) => san.startsWith("DNS:*.")) ||
+        (cert.subject &&
+          cert.subject.CN &&
+          cert.subject.CN.startsWith("DNS:*.")) ||
+        false
+          ? "yes"
+          : "no";
+
+      // Build the result object
+      const result = {
+        subject: (cert.subject && cert.subject.CN) || "",
+        issuer: (cert.issuer && cert.issuer.O) || "",
+        status: status,
+        validFrom: cert.valid_from,
+        validTo: cert.valid_to,
+        publicKeyAlgorithm: cert.pubkeyAlgorithm,
+        sans: sans,
+        daysUntilExpiry: daysUntilExpiry,
+        isWildcard: isWildcard,
+      };
+
+      resolve(result);
+    });
+
+    request.on("error", (err) => {
+      reject(new Error(`Error checking TLS stats: ${err}`));
+    });
+
+    request.end();
+  });
+};
 
 const sanitizeInput = function (url) {
   // Check if input is a valid URL or IP
@@ -56,7 +130,6 @@ const pingHosts = async function (host) {
     const result = await ping.promise.probe(host);
     online.online = result.alive;
   }
-  console.log(online);
   return online;
 };
 
@@ -75,6 +148,23 @@ app.post("/ping", limiter, async function (req, res) {
   } else {
     let result = await pingHosts(url);
     res.json({ state: result.online, ip: result.ip, url: url });
+  }
+});
+
+// POST endpoint to check TLS stats for a URL
+app.post("/check-tls-stats", limiter, async (req, res) => {
+  let url = sanitizeInput(req.body.url);
+  url = isFQDN(url);
+  if (!url) {
+    res.json({ error: "SSL Check missing FQDN" });
+    return;
+  }
+
+  try {
+    const result = await checkTLSStats(url);
+    res.json(result);
+  } catch (err) {
+    res.json({ error: err.message });
   }
 });
 

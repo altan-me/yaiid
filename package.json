@@ -1,7 +1,7 @@
 {
   "name": "yaiid",
   "version": "1.0.2",
-  "description": "",
+  "description": "YAIID - Yet Another Is It Down Checker",
   "main": "index.js",
   "scripts": {
     "test": "nodemon -r dotenv/config index.js",

@@ -22,6 +22,7 @@ h1 {
   border-width: 16px 18px;
   border-radius: 0.4vw;
   font-family: inherit;
+  max-width: 410px;
 }
 
 footer {
@@ -124,4 +125,26 @@ p {
   top: 0;
   right: -20px;
   transition: 0.5s;
+}
+
+.tlsStats {
+  margin-top: 40px;
+}
+
+table.tls-stats {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tls-property {
+  font-weight: bold;
+  padding-right: 10px;
+  text-align: right;
+  vertical-align: top;
+}
+
+.tls-value {
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
 }
