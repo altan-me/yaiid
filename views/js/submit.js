@@ -28,7 +28,7 @@ const displayResponse = function (response) {
       `${response.url && response.ip ? " " : ""}` +
       `${response.ip ? `💻 ${response.ip}` : ""}`;
 
-    populateUI("Site looks up from here.", innerText, true, "160px");
+    populateUI("👍Site looks up from here.", innerText, true, "160px");
   } else if (response.state == false) {
     populateUI("Site not responding.", " ", true, "127px");
   } else {
@@ -76,6 +76,7 @@ const displayTLSStats = function (response) {
   } catch (err) {
     // If there is an error, display the error message in the div
     tlsStats.textContent = err.message;
+    console.log("error state");
   }
 };
 
