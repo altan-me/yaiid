@@ -76,7 +76,6 @@ const displayTLSStats = function (response) {
   } catch (err) {
     // If there is an error, display the error message in the div
     tlsStats.textContent = err.message;
-    console.log("error state");
   }
 };
 
