@@ -158,7 +158,7 @@ app.post("/check-tls-stats", limiter, async (req, res) => {
   let url = sanitizeInput(req.body.url);
   url = isFQDN(url);
   if (!url) {
-    res.json({ error: "SSL Check missing FQDN" });
+    res.json({ TLS_Check: "not a FQDN 😢" });
     return;
   }
 
