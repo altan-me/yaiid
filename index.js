@@ -37,7 +37,7 @@ const isFQDN = function (input) {
   return fqdnRegex.test(input) ? input : null;
 };
 
-const checkTLSStats = async function (url) {
+const checkTLSAndServerStats = async function (url) {
   return new Promise((resolve, reject) => {
     const options = {
       method: "HEAD", // Reduces response payload size
@@ -163,7 +163,7 @@ app.post("/check-tls-stats", limiter, async (req, res) => {
   }
 
   try {
-    const result = await checkTLSStats(url);
+    const result = await checkTLSAndServerStats(url);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message });
