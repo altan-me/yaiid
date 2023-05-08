@@ -37,7 +37,7 @@ const isFQDN = function (input) {
   return fqdnRegex.test(input) ? input : null;
 };
 
-const checkTLSStats = async function (url) {
+const checkTLSAndServerStats = async function (url) {
   return new Promise((resolve, reject) => {
     const options = {
       method: "HEAD", // Reduces response payload size
@@ -47,61 +47,61 @@ const checkTLSStats = async function (url) {
       rejectUnauthorized: true,
       agent: false, //stops caching
     };
-    const request = https.request(options, (res) => {
-      const cert = res.socket.getPeerCertificate();
 
-      // Check if certificate is valid
-      let status;
-      if (cert.valid_to < new Date()) {
-        status = "expired";
-      } else if (cert.valid_from > new Date()) {
-        status = "not yet valid";
-      } else {
-        status = "valid";
-      }
+    https
+      .get(options, (res) => {
+        const cert = res.socket.getPeerCertificate();
 
-      // Get all the SANs in the certificate
-      let sans = [];
-      if (cert.subjectaltname) {
-        sans = cert.subjectaltname.split(",").map((san) => san.trim());
-      }
+        // Check if certificate is valid
+        let status;
+        if (cert.valid_to < new Date()) {
+          status = "expired";
+        } else if (cert.valid_from > new Date()) {
+          status = "not yet valid";
+        } else {
+          status = "valid";
+        }
 
-      // Calculate days until certificate expires
-      const daysUntilExpiry = Math.ceil(
-        (new Date(cert.valid_to) - new Date()) / (1000 * 60 * 60 * 24)
-      );
+        // Get all the SANs in the certificate
+        let sans = [];
+        if (cert.subjectaltname) {
+          sans = cert.subjectaltname.split(",").map((san) => san.trim());
+        }
 
-      // Check if certificate is a wildcard certificate
-      const isWildcard =
-        sans.find((san) => san.startsWith("DNS:*.")) ||
-        (cert.subject &&
-          cert.subject.CN &&
-          cert.subject.CN.startsWith("DNS:*.")) ||
-        false
-          ? "yes"
-          : "no";
+        // Calculate days until certificate expires
+        const daysUntilExpiry = Math.ceil(
+          (new Date(cert.valid_to) - new Date()) / (1000 * 60 * 60 * 24)
+        );
 
-      // Build the result object
-      const result = {
-        subject: (cert.subject && cert.subject.CN) || "",
-        issuer: (cert.issuer && cert.issuer.O) || "",
-        status: status,
-        validFrom: cert.valid_from,
-        validTo: cert.valid_to,
-        publicKeyAlgorithm: cert.pubkeyAlgorithm,
-        sans: sans,
-        daysUntilExpiry: daysUntilExpiry,
-        isWildcard: isWildcard,
-      };
+        // Check if certificate is a wildcard certificate
+        const isWildcard =
+          sans.find((san) => san.startsWith("DNS:*.")) ||
+          (cert.subject &&
+            cert.subject.CN &&
+            cert.subject.CN.startsWith("DNS:*.")) ||
+          false
+            ? "yes"
+            : "no";
 
-      resolve(result);
-    });
+        // Build the result object
+        const result = {
+          subject: (cert.subject && cert.subject.CN) || "",
+          issuer: (cert.issuer && cert.issuer.O) || "",
+          status: status,
+          validFrom: cert.valid_from,
+          validTo: cert.valid_to,
+          publicKeyAlgorithm: cert.pubkeyAlgorithm,
+          sans: sans,
+          daysUntilExpiry: daysUntilExpiry,
+          isWildcard: isWildcard,
+          server: res.headers.server || "", // Add server information to the result object
+        };
 
-    request.on("error", (err) => {
-      reject(new Error(`Error checking TLS stats: ${err}`));
-    });
-
-    request.end();
+        resolve(result);
+      })
+      .on("error", (err) => {
+        reject(new Error(`Error checking TLS stats: ${err}`));
+      });
   });
 };
 
@@ -163,7 +163,7 @@ app.post("/check-tls-stats", limiter, async (req, res) => {
   }
 
   try {
-    const result = await checkTLSStats(url);
+    const result = await checkTLSAndServerStats(url);
     res.json(result);
   } catch (err) {
     res.json({ error: err.message });
