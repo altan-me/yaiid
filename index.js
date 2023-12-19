@@ -11,6 +11,24 @@ const ping = require("ping");
 const https = require("https");
 
 // App Configuration
+app.use((req, res, next) => {
+  // Content-Security-Policy
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self';" +
+      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com;" +
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;" +
+      "img-src 'self';" +
+      "font-src 'self' https://fonts.gstatic.com;" // Add font-src directive
+    // Add other directives as needed
+  );
+  // X-Frame-Options
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  // Referrer-Policy
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  next();
+});
+
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
@@ -169,6 +187,12 @@ app.post("/check-tls-stats", limiter, async (req, res) => {
     res.json({ error: err.message });
   }
 });
+
+// Serve security.txt
+app.use(
+  "/.well-known",
+  express.static(path.join(__dirname, "public", ".well-known"))
+);
 
 // 404
 app.use(function (req, res, next) {
