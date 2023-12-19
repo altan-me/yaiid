@@ -2,6 +2,7 @@
 
 const express = require("express");
 const app = express();
+const cloudflare = require("cloudflare-express");
 const { body, validationResult } = require("express-validator");
 const favicon = require("serve-favicon");
 const rateLimit = require("express-rate-limit");
@@ -10,6 +11,7 @@ const { tcpPingPort } = require("tcp-ping-port");
 const ping = require("ping");
 const https = require("https");
 
+app.disable("x-powered-by");
 // App Configuration
 app.use((req, res, next) => {
   // Content-Security-Policy
@@ -28,7 +30,8 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   next();
 });
-
+app.use(cloudflare.restore());
+// app.set("trust proxy", true);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
