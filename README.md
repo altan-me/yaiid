@@ -1,6 +1,6 @@
 # YAIID - Yet Another Is It Down Checker
 
-![YAIID image](https://i.imgur.com/dBMuc6U.png)
+![YAIID image](https://imgur.com/LMVdvNU.png)
 
 YAIID is a simple NodeJS express application that checks whether a URL or IP address is accessible using TCP and ICMP ping. This application can be useful for monitoring the availability of websites or servers.
 
