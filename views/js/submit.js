@@ -28,9 +28,9 @@ const displayResponse = function (response) {
       `${response.url && response.ip ? " " : ""}` +
       `${response.ip ? `💻 ${response.ip}` : ""}`;
 
-    populateUI("👍Site looks up from here.", innerText, true, "160px");
+    populateUI("✅ Site looks up from here.", innerText, true, "160px");
   } else if (response.state == false) {
-    populateUI("Site not responding.", " ", true, "127px");
+    populateUI("❌ Site not responding.", " ", true, "127px");
   } else {
     populateUI(response.error, " ", true, "127px");
   }

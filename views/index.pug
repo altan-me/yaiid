@@ -1,20 +1,21 @@
 extends layout
 block layout-content
   #id
-    #wrapper.wrapper
-      h1 YAIID
-      sub YetAnotherIsItDown
-      .hub
-        span
-          form#pingCheck(action="/ping", method="POST")
-            input#url.url(
-              type="text",
-              name="url",
-              value="",
-              placeholder="example.com",
-              required
-            )
-            input.submit(type="submit", value="Check Status")
-      #response.response
-      #detail.detail
-      #tlsStats.tlsStats
+    #wrapper
+      hgroup
+        h1 YAIID
+        small YetAnotherIsItDown
+      span
+        form#pingCheck(action="/ping", method="POST")
+          input#url(
+            type="text",
+            name="url",
+            value="",
+            placeholder="Enter domain or IP address",
+            required
+          )
+          input(type="submit", value="Check Status")
+      hgroup
+        h5#response
+        small#detail
+      #tlsStats(style="text-wrap: balance;")
