@@ -3,3 +3,6 @@ footer {
   bottom: 0.5em;
   text-align: center;
 }
+.tls-value-list {
+  margin-bottom: 0;
+}
