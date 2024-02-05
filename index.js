@@ -17,11 +17,11 @@ app.use((req, res, next) => {
   // Content-Security-Policy
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self';" +
-      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://track.app.altan.me;" +
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;" +
+    "default-src 'self' https://ko-fi.com/;" +
+      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://track.app.altan.me https://storage.ko-fi.com;" +
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://storage.ko-fi.com;" +
       "connect-src 'self' https://track.app.altan.me;" +
-      "img-src 'self';" +
+      "img-src 'self' https://storage.ko-fi.com;" +
       "font-src 'self' https://fonts.gstatic.com;"
   );
   // X-Frame-Options
