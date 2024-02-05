@@ -112,10 +112,11 @@ const checkTLSAndServerStats = async function (url) {
           validFrom: cert.valid_from,
           validTo: cert.valid_to,
           publicKeyAlgorithm: cert.pubkeyAlgorithm,
-          sans: sans,
           daysUntilExpiry: daysUntilExpiry,
           isWildcard: isWildcard,
-          server: res.headers.server || "", // Add server information to the result object
+          server: res.headers.server || "",
+          sans: sans,
+          // Add server information to the result object
         };
 
         resolve(result);
