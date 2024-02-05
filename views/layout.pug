@@ -2,12 +2,26 @@ block variables
 doctype html
 html
   head
+    title #{title}
     meta(charset="utf-8")
     meta(
       name="viewport",
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     )
-    title #{title}
+    meta(name="title" content="isWebsiteDown.org")
+    meta(name="description" content="Yet another 'Is It Down' tool - Check whether the website you are trying to browse is online, or quickly view certificate validity information.")
+    meta(property="og:type" content="website")
+    meta(property="og:url" content="https://iswebsitedown.org/")
+    meta(property="og:title" content="isWebsiteDown.org")
+    meta(property="og:description" content="Yet another 'Is It Down' tool - Check whether the website you are trying to browse is online, or quickly view certificate validity information.")
+    meta(property="twitter:card" content="summary_large_image")
+    meta(property="twitter:url" content="https://iswebsitedown.org/")
+    meta(property="twitter:title" content="isWebsiteDown.org")
+    meta(property="twitter:description" content="Yet another 'Is It Down' tool - Check whether the website you are trying to browse is online, or quickly view certificate validity information.")
+    link(rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png")
+    link(rel="icon" href="/favicon.ico")
+    link(rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png")
+    link(rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png")
     style
       include css/pico.min.css
       include css/style.css

@@ -35,6 +35,8 @@ app.use(cloudflare.restore());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
+// Serve Favicons
+app.use(express.static(path.join(__dirname, "public", "images")));
 app.use(favicon(path.join(__dirname, "views", "favicon.ico")));
 app.use(
   express.urlencoded({
@@ -197,6 +199,11 @@ app.use(
   "/.well-known",
   express.static(path.join(__dirname, "public", ".well-known"))
 );
+
+// Serve robots.txt
+app.get("/robots.txt", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "robots.txt"));
+});
 
 // 404
 app.use(function (req, res, next) {
