@@ -6,3 +6,8 @@ footer {
 .tls-value-list {
   margin-bottom: 0;
 }
+.btn-container {
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+}

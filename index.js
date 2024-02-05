@@ -159,7 +159,7 @@ const pingHosts = async function (host) {
 
 //Return IP on index page
 app.get("/", (req, res) => {
-  res.render("index", { title: "YetAnotherIsItDown" });
+  res.render("index", { title: "isWebsiteDown.org" });
 });
 
 // Access the parse results as request.body
