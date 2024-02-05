@@ -37,16 +37,16 @@ const displayResponse = function (response) {
 };
 
 const displayTLSStats = function (response) {
-  // console.log(response);
+  // Clear previous data
   tlsStats.innerHTML = "";
+
   try {
     // Create a table to display the results
     let table = document.createElement("table");
     table.classList.add("tls-stats");
 
     // Add the table rows for each property
-    let properties = Object.keys(response);
-    properties.forEach((property) => {
+    Object.keys(response).forEach((property) => {
       let row = document.createElement("tr");
 
       // Add the property name cell
@@ -57,16 +57,25 @@ const displayTLSStats = function (response) {
 
       // Add the value cell
       let valueCell = document.createElement("td");
-
       let value = response[property];
 
+      // Check if value is an array and handle accordingly
       if (Array.isArray(value)) {
-        value = value.slice(0, 2) + "...(truncated)";
+        // Create a container for array items if they exist
+        let list = document.createElement("ul");
+        list.classList.add("tls-value-list");
+        value.forEach((item) => {
+          let listItem = document.createElement("li");
+          listItem.textContent = item;
+          list.appendChild(listItem);
+        });
+        valueCell.appendChild(list);
+      } else {
+        // Handle non-array values
+        valueCell.textContent = value;
       }
 
-      valueCell.textContent = value;
       valueCell.classList.add("tls-value");
-
       row.appendChild(valueCell);
       table.appendChild(row);
     });
@@ -74,8 +83,8 @@ const displayTLSStats = function (response) {
     // Add the table to the div
     tlsStats.appendChild(table);
   } catch (err) {
-    // If there is an error, display the error message in the div
-    tlsStats.textContent = err.message;
+    // Display error message if any
+    tlsStats.textContent = "Error: " + err.message;
   }
 };
 
