@@ -18,9 +18,9 @@ app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
     "default-src 'self' https://ko-fi.com/;" +
-      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://track.app.altan.me https://storage.ko-fi.com;" +
+      "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://app-analytics.net.altan.me https://storage.ko-fi.com;" +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://storage.ko-fi.com;" +
-      "connect-src 'self' https://track.app.altan.me;" +
+      "connect-src 'self' https://app-analytics.net.altan.me;" +
       "img-src 'self' https://storage.ko-fi.com;" +
       "font-src 'self' https://fonts.gstatic.com;"
   );
