@@ -2,14 +2,53 @@
 
 const express = require("express");
 const app = express();
-const cloudflare = require("cloudflare-express");
+// const cloudflare = require("cloudflare-express");
 const { body, validationResult } = require("express-validator");
 const favicon = require("serve-favicon");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
-const { tcpPingPort } = require("tcp-ping-port");
+const net = require("net");
+const { promises: dnsPromises } = require("dns");
 const ping = require("ping");
 const https = require("https");
+
+// Custom TCP ping implementation to replace tcp-ping-port package
+const tcpPingPort = async function(host, port = 80, timeout = 5000) {
+  try {
+    // Try to resolve hostname to IP
+    let ip = host;
+    if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(host)) {
+      try {
+        const addresses = await dnsPromises.resolve4(host);
+        ip = addresses[0];
+      } catch (err) {
+        // If DNS resolution fails, try the host as-is
+        ip = host;
+      }
+    }
+
+    // Attempt TCP connection
+    const socket = net.createConnection({ host: ip, port, timeout });
+    
+    return new Promise((resolve) => {
+      const handleSuccess = () => {
+        socket.destroy();
+        resolve({ online: true, ip });
+      };
+      
+      const handleError = () => {
+        socket.destroy();
+        resolve({ online: false, ip });
+      };
+      
+      socket.on("connect", handleSuccess);
+      socket.on("error", handleError);
+      socket.on("timeout", handleError);
+    });
+  } catch (err) {
+    return { online: false, ip: host };
+  }
+};
 
 app.disable("x-powered-by");
 // App Configuration
@@ -30,8 +69,8 @@ app.use((req, res, next) => {
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   next();
 });
-app.use(cloudflare.restore());
-// app.set("trust proxy", true);
+// app.use(cloudflare.restore());
+//app.set("trust proxy", true);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
