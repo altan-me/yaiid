@@ -11,8 +11,10 @@ import {
 } from "./lib.js";
 
 // keep in sync with public/_headers (asset-served responses)
+// the sha256 hash allows only the JSON-LD block in public/index.html
 const SECURITY_HEADERS = {
-  "Content-Security-Policy": "default-src 'self'",
+  "Content-Security-Policy":
+    "default-src 'self';script-src 'self' 'sha256-jfSsgJvdP24TNUpVqe+TBSsmgjVs6A+nMgQOp9UhhwA='",
   "X-Frame-Options": "SAMEORIGIN",
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",

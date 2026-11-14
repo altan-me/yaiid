@@ -1,6 +1,6 @@
 # YAIID - Yet Another Is It Down Checker
 
-![YAIID image](https://imgur.com/LMVdvNU.png)
+![YAIID screenshot](public/meta-image.png)
 
 YAIID is a simple Cloudflare Worker that checks whether a URL or IP address is accessible using a TCP connection. This application can be useful for monitoring the availability of websites or servers.
 

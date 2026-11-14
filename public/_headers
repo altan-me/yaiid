@@ -1,6 +1,7 @@
 # keep in sync with SECURITY_HEADERS in src/index.js (worker-served responses)
+# the sha256 hash allows only the JSON-LD block in index.html
 /*
-  Content-Security-Policy: default-src 'self'
+  Content-Security-Policy: default-src 'self';script-src 'self' 'sha256-jfSsgJvdP24TNUpVqe+TBSsmgjVs6A+nMgQOp9UhhwA='
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
