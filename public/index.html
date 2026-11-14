@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <title>isWebsiteDown.org</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="title" content="isWebsiteDown.org" />
+    <meta
+      name="description"
+      content="Yet another 'Is It Down' tool - Check whether the website you are trying to browse is online, or quickly view certificate validity information."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://iswebsitedown.org/" />
+    <meta property="og:title" content="isWebsiteDown.org" />
+    <meta
+      property="og:description"
+      content="Yet another 'Is It Down' tool - Check whether the website you are trying to browse is online, or quickly view certificate validity information."
+    />
+    <meta property="og:image" content="https://iswebsitedown.org/meta-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://iswebsitedown.org/" />
+    <meta name="twitter:title" content="isWebsiteDown.org" />
+    <meta
+      name="twitter:description"
+      content="Yet another 'Is It Down' tool - Check whether the website you are trying to browse is online, or quickly view certificate validity information."
+    />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="stylesheet" href="/css/pico.min.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <div class="grid">
+        <div id="id">
+          <div id="wrapper">
+            <hgroup>
+              <h1>😒 isWebsiteDown.org</h1>
+              <small>YetAnotherIsItDown</small>
+            </hgroup>
+            <span>
+              <form id="pingCheck" action="/ping" method="POST">
+                <input
+                  id="url"
+                  type="text"
+                  name="url"
+                  value=""
+                  placeholder="Enter domain or IP address"
+                  required
+                />
+                <input type="submit" value="Check Status" />
+              </form>
+            </span>
+            <hgroup>
+              <h5 id="response"></h5>
+              <small id="detail"></small>
+            </hgroup>
+            <div id="tlsStats"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="/js/submit.js" defer></script>
+  </body>
+</html>

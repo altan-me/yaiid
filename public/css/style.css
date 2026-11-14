@@ -1,0 +1,84 @@
+#tlsStats {
+  text-wrap: balance;
+}
+
+/* Certificate feedback card */
+.cert-card {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--pico-muted-border-color, #d8dde3);
+  border-radius: 0.6rem;
+  background: var(--pico-card-background-color, #ffffff);
+  text-align: left;
+}
+.cert-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.badge.ok {
+  background: rgba(46, 160, 67, 0.15);
+  color: #2ea043;
+}
+.badge.bad {
+  background: rgba(248, 81, 73, 0.15);
+  color: #d73a49;
+}
+.badge.warn {
+  background: rgba(210, 153, 34, 0.2);
+  color: #b07d10;
+}
+.badge.wildcard {
+  background: rgba(101, 108, 255, 0.15);
+  color: #5b5bd6;
+}
+.cert-grid {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.cert-row {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+.cert-key {
+  flex: 0 0 9.5rem;
+  color: var(--pico-muted-color, #667085);
+}
+.cert-val {
+  flex: 1;
+  word-break: break-word;
+}
+.cert-val.days.bad {
+  color: #d73a49;
+  font-weight: 600;
+}
+.cert-val.days.warn {
+  color: #b07d10;
+  font-weight: 600;
+}
+.cert-val.days.ok {
+  color: #2ea043;
+  font-weight: 600;
+}
+.sans {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.chip {
+  background: var(--pico-secondary-background, #eef0f3);
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.78rem;
+  font-family: var(--pico-font-family-monospace, monospace);
+}
