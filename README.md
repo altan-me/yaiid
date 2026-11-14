@@ -35,7 +35,7 @@ Then attach a custom domain (e.g. `iswebsitedown.org`) to the Worker in the Clou
 
 ## How it Works
 
-YAIID opens a raw TCP connection to port 80 of the target host using the Workers [`connect()`](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/) API and reports whether the connection succeeded, along with the resolved IP. `POST /ping` accepts a domain or IP address.
+YAIID checks the target with an HTTP HEAD request via `fetch()` — port 80 first, then 443 for HTTPS-only hosts; any HTTP response (even an error status) means the site is up — and reports the resolved IP via DNS-over-HTTPS. `POST /ping` accepts a domain or IP address. Using `fetch()` keeps `/ping` working on every Workers plan (raw `connect()` sockets need the TCP sockets capability).
 
 `POST /check-tls-stats` accepts a FQDN and inspects the certificate server-side: it opens a raw TCP connection to port 443 via `connect()`, sends a minimal TLS 1.2 ClientHello, reads the plaintext Certificate handshake message, and parses the leaf certificate with `node:crypto`'s `X509Certificate` (Workers cannot read the peer certificate of an outbound TLS connection directly). It also performs a live HTTPS HEAD request, which validates the live certificate and returns the `server` header.
 
@@ -51,9 +51,8 @@ Static assets (pages, CSS, JS, images, `robots.txt`, `/.well-known/security.txt`
 
 ## Differences from the old Node/Express version
 
-- ICMP ping is not possible in Workers; IP targets are checked over TCP only.
-- Certificate details are extracted with a minimal TLS 1.2 handshake instead of `getPeerCertificate()` (not implemented in workerd); servers that negotiate TLS 1.3 only fall back to the live HTTPS check (status + `server` header, no cert fields).
-- `connect()` to arbitrary hosts/ports requires the Workers TCP sockets capability (enabled on Workers plans that support `cloudflare:sockets`).
+- ICMP ping and raw TCP checks are not used for `/ping` (raw sockets need the TCP sockets capability, not available on every plan, and ICMP is impossible in Workers); it does an HTTP-level check via `fetch()` instead, with the IP resolved via DoH.
+- Certificate details are extracted with a minimal TLS 1.2 handshake over `connect()` instead of `getPeerCertificate()` (not implemented in workerd); on plans without the TCP sockets capability, or for TLS 1.3-only servers, the endpoint falls back to the live HTTPS check (status + `server` header, no cert fields).
 
 ## Contributing
 

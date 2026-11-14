@@ -3,6 +3,8 @@ import { X509Certificate } from "node:crypto";
 import {
   isFQDN,
   readUrl,
+  hostIsUp,
+  resolveIP,
   buildClientHello,
   extractLeafCert,
   dnField,
@@ -37,32 +39,6 @@ function json(data, status = 200) {
     })
   );
 }
-
-// TCP check via cloudflare:sockets; opened resolves with the peer IP.
-// shortcut: ICMP ping is not possible in Workers, TCP-only replaces the old
-// net + ping fallback for IP inputs.
-const tcpPingPort = async function (host, port = 80, timeout = 5000) {
-  let socket;
-  try {
-    socket = connect({ hostname: host, port });
-    const info = await Promise.race([
-      socket.opened,
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("timeout")), timeout)
-      ),
-    ]);
-    // remoteAddress may come back as "host:port" (e.g. in local dev)
-    const ip = String(info.remoteAddress || host).replace(
-      new RegExp(`:${port}$`),
-      ""
-    );
-    return { online: true, ip };
-  } catch (err) {
-    return { online: false, ip: host };
-  } finally {
-    socket?.close().catch(() => {});
-  }
-};
 
 const MAX_HANDSHAKE_BYTES = 256 * 1024; // leaf certs are a few KiB
 
@@ -175,8 +151,11 @@ async function handlePing(request, env) {
   const input = await readUrl(request);
   if (input.error) return json({ error: input.error }, input.status || 200);
 
-  const result = await tcpPingPort(input.url);
-  return json({ state: result.online, ip: result.ip, url: input.url });
+  const [state, ip] = await Promise.all([
+    hostIsUp(input.url),
+    resolveIP(input.url),
+  ]);
+  return json({ state, ip, url: input.url });
 }
 
 async function handleTLSStats(request, env) {

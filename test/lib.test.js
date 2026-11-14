@@ -1,11 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { createServer } from "node:http";
 import { X509Certificate } from "node:crypto";
 import {
   isFQDN,
   sanitizeInput,
   readUrl,
+  hostIsUp,
+  resolveIP,
   buildClientHello,
   extractLeafCert,
   dnField,
@@ -115,6 +118,25 @@ test("readUrl validates the request body", async () => {
   // oversized url string (no content-length needed) -> 413
   const longUrl = await readUrl(mk(JSON.stringify({ url: "a".repeat(3000) })));
   assert.equal(longUrl.status, 413);
+});
+
+test("hostIsUp is true for a responding host, false for a closed port", async () => {
+  const server = createServer((req, res) => {
+    res.writeHead(200);
+    res.end();
+  });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  const port = server.address().port;
+  try {
+    assert.equal(await hostIsUp(`127.0.0.1:${port}`, 2000), true);
+    assert.equal(await hostIsUp("127.0.0.1:1", 500), false);
+  } finally {
+    server.close();
+  }
+});
+
+test("resolveIP returns IP literals unchanged without any lookup", async () => {
+  assert.equal(await resolveIP("1.1.1.1"), "1.1.1.1");
 });
 
 test("dnField extracts CN/O from multi-line and comma DNs", () => {

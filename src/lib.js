@@ -131,3 +131,40 @@ export function extractLeafCert(buf) {
 
 export const dnField = (dn, field) =>
   (dn.match(new RegExp(`(?:^|[\\n,])${field}=([^,\\n]+)`)) || [])[1] || dn;
+
+// HTTP-level up check: any HTTP response (even 4xx/5xx) means the host is
+// reachable. Uses fetch() because raw connect() needs the TCP sockets
+// capability, which not every plan has. Tries port 80 first (original
+// behaviour), then 443 for HTTPS-only hosts.
+export async function hostIsUp(host, timeout = 5000) {
+  for (const scheme of ["http", "https"]) {
+    try {
+      await fetch(`${scheme}://${host}/`, {
+        method: "HEAD",
+        redirect: "manual",
+        signal: AbortSignal.timeout(timeout),
+      });
+      return true;
+    } catch {}
+  }
+  return false;
+}
+
+// Resolve the A record via DNS-over-HTTPS (node:dns is only partially
+// supported in Workers). Returns the host itself on any failure.
+export async function resolveIP(host) {
+  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(host)) return host;
+  try {
+    const r = await fetch(
+      `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(host)}&type=A`,
+      {
+        headers: { accept: "application/dns-json" },
+        signal: AbortSignal.timeout(3000),
+      }
+    );
+    const j = await r.json();
+    return j.Answer?.[0]?.data || host;
+  } catch {
+    return host;
+  }
+}
